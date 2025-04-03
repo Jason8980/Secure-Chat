@@ -6,7 +6,7 @@ import asyncio, os
 app = FastAPI()
 
 # Database Setup – Replace the connection string with your MongoDB URI if needed
-client = MongoClient("mongodb+srv://your_mongodb_connection")
+client = MongoClient("mongodb+srv://Filetolink:Jason8980@cluster0.pdjsv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client["secure_chat"]
 messages_collection = db["messages"]
 media_collection = db["media"]
