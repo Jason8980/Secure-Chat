@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Secure Chat</title>
+  <style>
+    body {
+      background-color: black;
+      color: #00ff00;
+      font-family: monospace;
+    }
+    #chat-container {
+      max-width: 600px;
+      margin: auto;
+      border: 1px solid #00ff00;
+      padding: 20px;
+      height: 500px;
+      overflow-y: auto;
+    }
+    .message {
+      padding: 5px;
+      margin: 5px 0;
+    }
+    .sent {
+      text-align: right;
+    }
+    .received {
+      text-align: left;
+    }
+    #input-area {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    #messageInput {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #00ff00;
+      background-color: #000;
+      color: #00ff00;
+    }
+    #sendBtn {
+      padding: 10px;
+      background-color: #00ff00;
+      color: #000;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align: center;">Secure Chat</h1>
+  <div id="chat-container"></div>
+  <div id="input-area">
+    <input type="text" id="messageInput" placeholder="Type a message">
+    <button id="sendBtn">Send</button>
+  </div>
+  
+  <script>
+    // Prompt the user for their username: either Aryan$8980 or Parth#8012
+    const username = prompt('Enter your username (Aryan$8980 or Parth#8012):');
+    // Set your own logo based on username
+    const userLogo = (username === 'Aryan$8980') ? 'H7&' : 'X*M';
+    // Replace <YOUR_BACKEND_URL> with your deployed backend URL (for testing you can use localhost if running locally)
+    const wsUrl = 'wss://<YOUR_BACKEND_URL>/chat/' + username;
+    const socket = new WebSocket(wsUrl);
+    
+    const chatContainer = document.getElementById('chat-container');
+    
+    socket.onmessage = function(event) {
+      const messageDiv = document.createElement('div');
+      messageDiv.classList.add('message');
+      
+      // Check if the incoming message is from your side or the other side
+      if(event.data.startsWith(userLogo + ':')) {
+        messageDiv.classList.add('sent');
+      } else {
+        messageDiv.classList.add('received');
+      }
+      messageDiv.textContent = event.data;
+      chatContainer.appendChild(messageDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    };
+    
+    document.getElementById('sendBtn').addEventListener('click', function() {
+      const input = document.getElementById('messageInput');
+      const message = input.value;
+      socket.send(message);
+      
+      // Display your own message on the right immediately
+      const messageDiv = document.createElement('div');
+      messageDiv.classList.add('message', 'sent');
+      messageDiv.textContent = userLogo + ': ' + message;
+      chatContainer.appendChild(messageDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      input.value = '';
+    });
+  </script>
+</body>
+</html>
