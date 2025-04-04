@@ -4,16 +4,13 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Copy the entire project (including package.json)
+COPY . .
 
 # Install dependencies
 RUN npm install
 
-# Copy the entire project
-COPY . .
-
-# Build the frontend
+# Build the frontend (if applicable)
 RUN npm run build
 
 # Install serve globally
