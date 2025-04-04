@@ -8,7 +8,7 @@ from pymongo import MongoClient
 app = FastAPI()
 
 # Optimize MongoDB connection (limit connection pool)
-client = MongoClient("mongodb+srv://Megasaver:9nLFTisTq3uj53Il@cluster0.iqcva.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", maxPoolSize=5)
+client = MongoClient("mongodb+srv://Filetolink:Jason8980@cluster0.pdjsv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", maxPoolSize=5)
 db = client["your_database"]
 
 # Reduce logging level to save memory
