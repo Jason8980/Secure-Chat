@@ -1,20 +1,26 @@
-# Stage 1: Build the React Frontend
-FROM node:16-alpine AS build-frontend
-WORKDIR /app/frontend
-COPY frontend/package*.json ./
-RUN npm install
-COPY frontend/ ./
-RUN npm run build
+# Use an official Node.js image
+FROM node:18-alpine
 
-# Stage 2: Set Up the Python Backend
-FROM python:3.9-slim
+# Set working directory
 WORKDIR /app
 
-COPY backend/ ./backend
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-COPY --from=build-frontend /app/frontend/build ./frontend/build
+# Install dependencies
+RUN npm install
 
-# Change port back to 8000 for Koyeb compatibility
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Copy the entire project
+COPY . .
+
+# Build the frontend
+RUN npm run build
+
+# Install serve globally
+RUN npm install -g serve
+
+# Expose the port
+EXPOSE 3000
+
+# Start the frontend with serve
+CMD ["serve", "-s", "build", "-l", "3000"]
